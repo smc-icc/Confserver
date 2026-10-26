@@ -1,6 +1,6 @@
 # Community 公开源码快照
 
-来源工程：ConfServer。来源分支：Community。来源提交：9aee9b4f83218114b42902173d94493fbfdd82a9。生成日期：2026-10-26。
+来源工程：ConfServer。来源分支：Community。来源提交：bdd783d1e4c382fa8db432dd7c36deab67756f52。生成日期：2026-10-26。
 
 本仓库保留 GitHub 初始化提交，并在 Community 分支发布经过检查的独立源码快照。GitLab 开发仓库继续独立维护，不复制其 Git 对象或完整历史，也不配置自动镜像。
 

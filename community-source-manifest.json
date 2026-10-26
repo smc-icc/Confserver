@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "sourceRevision": "9aee9b4f83218114b42902173d94493fbfdd82a9",
-  "createdAt": "2026-10-26T08:42:19.014Z",
+  "sourceRevision": "bdd783d1e4c382fa8db432dd7c36deab67756f52",
+  "createdAt": "2026-10-26T09:06:39.394Z",
   "files": [
     {
       "path": ".dockerignore",
@@ -3632,6 +3632,22 @@
       "sha256": "5c7050b162ce42cfc0ce0f136745fdd122740eb79308099e972143eccfbdd554"
     },
     {
+      "path": "docs/community/screenshots/conf-channel-website.png",
+      "sha256": "b01db64af534cb355cdc769407d98028568a3a45c5eb86f3bd27adc7aed4b65f"
+    },
+    {
+      "path": "docs/community/screenshots/conf-edition-components.png",
+      "sha256": "1a12cecabfe513aeced0371f499f90a6460fb70226b07d23e0da865c2537ab0c"
+    },
+    {
+      "path": "docs/community/screenshots/conf-system-users.png",
+      "sha256": "3cabdd4c869a58cd2c423d362a3d32fb5a5c82153f2856ffc6b44e5bf9d8ef95"
+    },
+    {
+      "path": "docs/community/screenshots/conf-vdn-agent.png",
+      "sha256": "26e20d28ab76f9977ad0784fa5354e9f63d6d9ac66122e72d5547c0d214a70d7"
+    },
+    {
       "path": "docs/community/upgrade-examples/aiqc.plan.example.json",
       "sha256": "2161e3e8fd8e899ee9e32be5090034229c65597fcaceb595feff99bab857804f"
     },
@@ -4013,11 +4029,11 @@
     },
     {
       "path": "PUBLICATION.md",
-      "sha256": "f5c8295ec0c4df10198c22d499b0b0d577f078c78fe2cc5653def248d285bdbd"
+      "sha256": "fc0dc2a10c1b752bac491f36d231aecbd485863e05763ab757a1ff5db5cfdbf8"
     },
     {
       "path": "README.md",
-      "sha256": "458162052c1b920ff730dfc9ba1ff79536e468071ceb861e34fc46b505eaa00c"
+      "sha256": "7ce01e63e8869aeab52306e5891b8e199e7394a12f7891daadc20bb5fbcfd674"
     },
     {
       "path": "README.zh.md",
