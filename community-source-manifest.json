@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
-  "sourceRevision": "bdd783d1e4c382fa8db432dd7c36deab67756f52",
-  "createdAt": "2026-10-26T09:06:39.394Z",
+  "sourceRevision": "f00f7f2c29bfe6a1de60cce2d63f8b20d9cf93dd",
+  "createdAt": "2026-10-26T09:24:21.795Z",
   "files": [
     {
       "path": ".dockerignore",
@@ -3620,6 +3620,10 @@
       "sha256": "e1457543122b778a0bf64421bae7bb145c1cef40394270c14a5b631a78bb3d3f"
     },
     {
+      "path": "docs/community/contact/qq-group.png",
+      "sha256": "5256c4d50044561d016257cba4cdee6ab5755566c45699dd1d798e18f9b2397f"
+    },
+    {
       "path": "docs/community/online-offline-installation.md",
       "sha256": "77535028de1737f4df8f9a0763e89120fb74f79a88d7f370adf0667bc03b5286"
     },
@@ -4029,11 +4033,11 @@
     },
     {
       "path": "PUBLICATION.md",
-      "sha256": "fc0dc2a10c1b752bac491f36d231aecbd485863e05763ab757a1ff5db5cfdbf8"
+      "sha256": "481613af4e56827dadc1bc9b2416efb2794398d969799cd61e310db3996f1d31"
     },
     {
       "path": "README.md",
-      "sha256": "7ce01e63e8869aeab52306e5891b8e199e7394a12f7891daadc20bb5fbcfd674"
+      "sha256": "4e48dce9a8bcadd431f22c9b926851a4f7307b8eea039021cbbeda49295e175f"
     },
     {
       "path": "README.zh.md",

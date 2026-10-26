@@ -103,6 +103,17 @@ npm run build:community
 - [在线／离线安装交付工具](docs/community/online-offline-installation.md)：安装介质制作及执行方式。
 - [OmniAgent](https://github.com/smc-icc/OmniAgent/tree/Community)：与 ConfServer 配套的全媒体坐席工作台。
 
+## 联系方式
+
+- QQ 群：**1128992754**
+- 欢迎加入 SMC-ICC 交流群，交流使用经验、反馈问题与讨论功能需求。
+
+使用 QQ 扫描下方二维码加入群聊，也可以通过群号搜索加入。
+
+<img src="docs/community/contact/qq-group.png" alt="SMC-ICC QQ 交流群二维码，群号 1128992754" width="320" />
+
+[查看二维码原图](docs/community/contact/qq-group.png)
+
 ## License
 
 BSD-3-Clause，见 [LICENSE](LICENSE)。保留原有 TARS 及其他第三方组件的版权、许可证和归属声明。
