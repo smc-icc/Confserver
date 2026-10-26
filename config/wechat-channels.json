@@ -1,0 +1,116 @@
+{
+  "account_id": 1,
+  "public_base_url": "https://omni.seami.cloud",
+  "channels": {
+    "wechat_mp": [
+      {
+        "conf_id": "wechat_mp_1781019500572_yjec80",
+        "omni_channel_id": 1,
+        "omni_inbox_id": 5,
+        "name": "海米云微信企业号测试",
+        "inbox_name": "250612475@qq.com",
+        "account_type": "service",
+        "app_id": "wx94205c876197930f",
+        "app_secret": "a78a1d42aeb3304350174485090c001f",
+        "token": "SeaMiCloud",
+        "encoding_aes_key": "",
+        "created_at": "2026-06-09T15:38:20.572Z",
+        "updated_at": "2026-06-09T15:38:20.572Z",
+        "webhook_url": "http://localhost:3001/webhooks/wechat/mp/wx94205c876197930f"
+      },
+      {
+        "conf_id": "wechat_mp_1789206000000_xiaofan",
+        "omni_channel_id": 3,
+        "omni_inbox_id": 17,
+        "name": "小凡机器人",
+        "inbox_name": "小凡机器人",
+        "account_type": "service",
+        "app_id": "wx12179eec48fc0b84",
+        "app_secret": "c5037bea1245f8ca0cc2ceb9ce4f7196",
+        "token": "SeaMiCloud",
+        "encoding_aes_key": "vRdFXZghIVjYgOl7jmWY2mskxLDNAIiH1VqsFKvCJ5H",
+        "supports_active_reply": false,
+        "passive_reply_enabled": true,
+        "route_ttl_seconds": 300,
+        "pending_reply_max": 20,
+        "reply_timeout_seconds": 5,
+        "reply_timeout_level2_seconds": 30,
+        "pending_ttl_seconds": 300,
+        "idle_recycle_seconds": 300,
+        "routes": [
+          {
+            "trigger": "on_agent_no_reply",
+            "priority": 0,
+            "app_type": "itr",
+            "flow_id": 1003,
+            "enabled": true
+          },
+          {
+            "trigger": "on_idle_timeout",
+            "priority": 0,
+            "app_type": "release",
+            "enabled": true
+          }
+        ],
+        "created_at": "2026-09-12T10:20:00.000Z",
+        "updated_at": "2026-09-12T11:40:00.000Z",
+        "webhook_url": "https://omni.seami.cloud/webhooks/wechat/mp/wx12179eec48fc0b84"
+      }
+    ],
+    "wecom_kf": [
+      {
+        "conf_id": "wecom_kf_1789206000001_haimi",
+        "omni_channel_id": 1,
+        "omni_inbox_id": 13,
+        "name": "海米云微信客服",
+        "inbox_name": "海米云微信客服",
+        "corp_id": "ww6ff59d57f220cae1",
+        "secret": "twVshEzyvhryxr7ExK7JRpT1mCZIuYrhv1kVZ8WQM04",
+        "token": "SeaMiCloud",
+        "open_kfid": "wk6Kc1LwAA2s0Z38fmsZrlirZ-3u18YQ",
+        "created_at": "2026-09-13T06:00:00.000Z",
+        "updated_at": "2026-09-13T07:24:51.076Z",
+        "webhook_url": "https://omni.seami.cloud/webhooks/wecom/kf/1",
+        "routes": [
+          {
+            "trigger": "on_agent_end",
+            "priority": 0,
+            "app_type": "itr",
+            "flow_id": 1005,
+            "enabled": true
+          },
+          {
+            "trigger": "on_agent_no_reply",
+            "priority": 0,
+            "app_type": "itr",
+            "flow_id": 1003,
+            "enabled": true
+          },
+          {
+            "trigger": "on_idle_timeout",
+            "priority": 0,
+            "app_type": "release",
+            "enabled": true
+          }
+        ]
+      }
+    ],
+    "wecom_contact": [
+      {
+        "conf_id": "wecom_contact_1789289261675_gs8f55",
+        "omni_channel_id": 2,
+        "omni_inbox_id": 18,
+        "name": "海米云客户联系",
+        "inbox_name": "海米云客户联系",
+        "corp_id": "ww6ff59d57f220cae1",
+        "contact_secret": "twVshEzyvhryxr7ExK7JRpT1mCZIuYrhv1kVZ8WQM04",
+        "agent_id": 1000002,
+        "token": "SeaMiCloud",
+        "created_at": "2026-09-13T08:47:41.675Z",
+        "updated_at": "2026-09-13T08:51:46.225Z",
+        "webhook_url": "https://omni.seami.cloud/webhooks/wecom/contact/2"
+      }
+    ]
+  },
+  "updated_at": "2026-09-12T11:40:00.000Z"
+}

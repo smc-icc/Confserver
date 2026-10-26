@@ -1,0 +1,20 @@
+const crypto=require('node:crypto');
+const CaptchaChallengeStore=require('../../service/auth/CaptchaChallengeStore');
+function fail(message,status=400){const e=new Error(message);e.status=status;throw e;}
+function mutationGuard(ctx){const h=ctx.headers||ctx.request.headers||{};if(h['sec-fetch-site']==='cross-site')fail('不允许跨站提交',403);if(h.origin){let host;try{host=new URL(h.origin).host;}catch{fail('请求来源无效',403);}if(ctx.host&&host!==ctx.host)fail('不允许跨站提交',403);}if(h['content-type']&&!/^application\/json(?:;|$)/i.test(h['content-type']))fail('请使用 JSON 请求',415);}
+function fields(input,allowed){if(!input||typeof input!=='object'||Array.isArray(input)||Object.keys(input).some(k=>!allowed.includes(k)))fail('请求字段不正确');return input;}
+const rate=new Map();
+async function consumeCaptcha(ctx,store){if(!ctx.session)fail('验证会话无效',401);if(!await CaptchaChallengeStore.consumeSession(ctx,(ctx.request.body||{}).captcha,store))fail('验证码不正确或已使用');const now=Date.now(),key=String(ctx.ip||'unknown');let record=rate.get(key);if(!record||now-record.at>60000)record={at:now,count:0};if(++record.count>10)fail('操作过于频繁，请稍后再试',429);rate.set(key,record);if(rate.size>10000)for(const [k,v]of rate)if(now-v.at>60000)rate.delete(k);}
+function createController(service,auth,login,captchaStore){
+ const controller={};const map={profile:['getProfile',[]],mine:['listMine',[]],apply:['apply',['kind','vdn_id','vdn_name','organization','reason']],withdraw:['withdraw',['id']],list:['listAdmin',['status','limit']],review:['review',['id','decision','vdn_id','note','identity_verified']],accounts:['accounts',['query','vdn_id']],grants:['grants',['vdn_id']],grant:['grant',['uid','vdn_id','identity_verified','note']],revoke:['revoke',['uid','vdn_id','note']],retry:['retry',['id']]};
+ for(const [name,[method,allowed]]of Object.entries(map))controller[name]=async ctx=>{
+  try{if(!ctx.uid)fail('请先登录',401);if(ctx.method!=='GET')mutationGuard(ctx);const value=ctx.method==='GET'?{...(ctx.query||{})}:(ctx.request.body||{});if(ctx.method==='GET')delete value.ticket;const body=fields(value,allowed);const s=service||require('../../service/integration/VdnAccessService').getService();const result=await s[method](ctx.uid,body);ctx.set&&ctx.set('Cache-Control','no-store');ctx.body={ret_code:200,data:result};}
+  catch(e){ctx.status=e.status||503;ctx.body={ret_code:ctx.status,err_msg:e.status?e.message:'申请或授权操作失败，请稍后重试'};}
+ };
+ controller.register=async ctx=>{try{mutationGuard(ctx);const body=fields(ctx.request.body||{},['name','email','password','captcha']);await consumeCaptcha(ctx,captchaStore);const a=auth||require('../../service/integration/VdnPortalAuth').getAuth();const result=await a.register({name:body.name,email:body.email,password:body.password});ctx.body={ret_code:200,data:result};}catch(e){ctx.status=e.status||503;ctx.body={ret_code:ctx.status,err_msg:e.status?e.message:'注册失败，请稍后重试'};}};
+ controller.login=async ctx=>{try{mutationGuard(ctx);const body=fields(ctx.request.body||{},['uid','password','captcha']);await consumeCaptcha(ctx,captchaStore);if(typeof body.uid!=='string'||typeof body.password!=='string'||body.uid.length>254||body.password.length>128)fail('登录信息不正确');const ldap=await require('../../../sso/db-service/set/SetService').ldapConf();const proof=ldap.enableLDAP?body.password:crypto.createHash('sha1').update(body.password).digest('hex');const s=login||require('../../../sso/service/login/LoginService');const result=await s.login(body.uid,proof,{purpose:'portal'});if(result.errMsg)fail('帐号或密码不正确',401);ctx.body={ret_code:200,data:{ticket:result.ticket,management_allowed:Boolean(result.management_allowed)}};}catch(e){ctx.status=e.status||503;ctx.body={ret_code:ctx.status,err_msg:e.status?e.message:'登录失败，请稍后重试'};}};
+ return controller;
+}
+module.exports={...createController(),createController,mutationGuard};
+// Public registration always uses verified account approval, never legacy mailbox-only signup.
+module.exports.register=ctx=>require('./VdnManagerController').register(ctx);

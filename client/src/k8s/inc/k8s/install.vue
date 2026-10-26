@@ -1,0 +1,356 @@
+<template>
+  <el-dialog
+    :label="$t('operate.k8s')"
+    :visible.sync="DetailModel.show"
+    width="1060px"
+    :before-close="closeDetailModel"
+    v-if="DetailModel.show"
+    top="10px"
+    :close-on-click-modal="false"
+  >
+    <el-collapse v-model="activeName" accordion @change="HandleClick">
+      <el-collapse-item name="copyNode">
+        <template slot="title"
+          ><b>{{ $t("operate.copyNode") }}</b></template
+        >
+        <replicas
+          ref="replicas"
+          :install="true"
+          :replicas="deployObjData.replicas"
+          @saveReplicas="saveReplicas"
+        ></replicas>
+      </el-collapse-item>
+
+      <el-collapse-item name="pull">
+        <template slot="title"
+          ><b>{{ $t("operate.pull") }}</b></template
+        >
+        <pull
+          ref="pull"
+          :install="true"
+          :pull="deployObjData.imagePullPolicy"
+          @savePull="savePull"
+        ></pull>
+      </el-collapse-item>
+
+      <el-collapse-item name="stacked">
+        <template slot="title"
+          ><b>{{ $t("operate.stacked") }}</b></template
+        >
+        <stacked
+          ref="stacked"
+          :install="true"
+          :notStacked="deployObjData.notStacked"
+          @saveStacked="saveStacked"
+        ></stacked>
+      </el-collapse-item>
+
+      <el-collapse-item name="launcherType">
+        <template slot="title"
+          ><b>{{ $t("operate.launcherType") }}</b></template
+        >
+        <launcher-type
+          ref="launcherType"
+          :install="true"
+          :launcherType="deployObjData.launcherType"
+          @saveLauncherType="saveLauncherType"
+        ></launcher-type>
+      </el-collapse-item>
+      <el-collapse-item name="jobModel">
+        <template slot="title"
+          ><b>{{ $t("operate.jobModel") }}</b></template
+        >
+        <jobModel
+          ref="jobModel"
+          :install="true"
+          v-if="k8sModel"
+          :daemonSet="deployObjData.daemonSet"
+          @saveJobModel="saveJobModel"
+        ></jobModel>
+      </el-collapse-item>
+
+      <el-collapse-item name="nodeSelect">
+        <template slot="title"
+          ><b>{{ $t("operate.nodeSelect") }}</b></template
+        >
+        <abilityAffinity
+          ref="affinity"
+          :install="true"
+          :k8sModel="k8sModel"
+          :labelMatchArr="labelMatchArr"
+          :LabelMatchOperator="LabelMatchOperator"
+          @saveAffinity="saveAffinity"
+        ></abilityAffinity>
+      </el-collapse-item>
+
+      <el-collapse-item name="network">
+        <template slot="title"
+          ><b>{{ $t("operate.network") }}</b></template
+        >
+        <network-mapping
+          ref="network"
+          :install="true"
+          :k8sModel="k8sModel"
+          @saveNetwork="saveNetwork"
+        >
+        </network-mapping>
+      </el-collapse-item>
+
+      <el-collapse-item name="disk">
+        <template slot="title"
+          ><b>{{ $t("operate.disk") }}</b></template
+        >
+        <disk-manger
+          ref="disk"
+          :install="true"
+          :k8sModel="k8sModel"
+          :mounts="mounts"
+          @saveDisk="saveDisk"
+        ></disk-manger>
+      </el-collapse-item>
+
+      <el-collapse-item name="resource">
+        <template slot="title"
+          ><b>{{ $t("operate.resource") }}</b></template
+        >
+        <resource-manger
+          ref="resource"
+          :install="true"
+          :sourceModel="sourceModel"
+          @saveResource="saveResource"
+        ></resource-manger>
+      </el-collapse-item>
+      <!-- 
+      <el-collapse-item name="6">
+        <template slot="title"
+          ><b>{{ $t("operate.hpa") }}</b></template
+        >
+        <div>
+          <hpa-manger
+            :hpaModel="hpaModel"
+            :serverData="serverData"
+            :sourceModel="sourceModel"
+            :indicators="indicators"
+            @saveHpa="saveHpa"
+          ></hpa-manger>
+        </div>
+      </el-collapse-item> -->
+
+      <el-collapse-item name="yaml">
+        <template slot="title"
+          ><b>{{ $t("operate.yaml") }}</b></template
+        >
+        <YamlEditor ref="yamlEdit" v-model="yamlContent"></YamlEditor>
+      </el-collapse-item>
+    </el-collapse>
+
+    <br />
+    <el-button type="primary" native-type="submit" @click="submit">{{
+      $t("common.submit")
+    }}</el-button>
+
+  </el-dialog>
+</template>
+
+<script>
+import jsYaml from "js-yaml";
+import pull from "./pull";
+import launcherType from "./launcherType";
+import stacked from "./stacked";
+import jobModel from "./jobModel";
+import replicas from "./replicas";
+import abilityAffinity from "./abilityAffinity";
+import networkMapping from "./networkMapping";
+import diskManger from "./disk";
+import resourceManger from "./resource";
+import hpaManger from "./hpa";
+import YamlEditor from "@/components/editor/yaml-editor";
+
+export default {
+  name: "installK8S",
+  components: {
+    pull,
+    launcherType,
+    stacked,
+    jobModel,
+    replicas,
+    abilityAffinity,
+    diskManger,
+    networkMapping,
+    resourceManger,
+    YamlEditor,
+    hpaManger,
+  },
+  props: ["deployObj"],
+  data() {
+    return {
+      DetailModel: {
+        show: false,
+      },
+      activeName: "copyNode",
+      deployObjData: null,
+      k8sModel: {},
+      labelMatchArr: [],
+      LabelMatchOperator: [],
+      sourceModel: {},
+      serverData: {},
+      hpaModel: {
+        minReplicas: "",
+        maxReplicas: "",
+        indicatorData: [],
+      },
+      indicators: [],
+      yamlContent: "",
+      mounts: this.deployObj.mounts || [],
+    };
+  },
+  mounted() {
+    this.deployObjData = this.deployObj;
+    this.show();
+  },
+  methods: {
+    HandleClick(activeName) {
+      if (activeName == "yaml") {
+        this.$nextTick(() => {
+          let deployObjData = JSON.parse(JSON.stringify(this.deployObjData));
+
+          delete deployObjData.cloud;
+          this.yamlContent = jsYaml.dump(deployObjData);
+
+          this.$refs.yamlEdit.refresh();
+        });
+      }
+    },
+    show() {
+      this.getDefaultValue();
+
+      this.deployObjData.repo = this.deployObjData.repo || {};
+      this.deployObjData.repo.id = "";
+      this.deployObjData.replicas = this.deployObjData.replicas || 1;
+      this.deployObjData.daemonSet = this.deployObjData.daemonSet || false;
+      this.deployObjData.launcherType =
+        this.deployObjData.launcherType || "background";
+      this.deployObjData.notStacked = this.deployObjData.notStacked || true;
+      this.deployObjData.imagePullPolicy =
+        this.deployObjData.imagePullPolicy || "Always";
+
+      this.k8sModel.abilityAffinity =
+        this.deployObjData.abilityAffinity || "AppOrServerPreferred";
+      this.k8sModel.labelMatchArr = this.deployObjData.nodeSelector || [];
+
+      this.k8sModel.HostIpc = this.deployObjData.hostIPC || false;
+      this.k8sModel.HostNetwork = this.deployObjData.hostNetwork || false;
+      this.k8sModel.showHostPort = this.deployObjData.hostPorts.length > 0;
+      this.k8sModel.HostPortArr = [];
+      (this.deployObjData.servants || []).forEach((h) => {
+        let index = this.deployObjData.hostPorts.findIndex((value) => {
+          return value.name == h.name;
+        });
+
+        this.k8sModel.HostPortArr.push({
+          obj: h.name,
+          HostPort: h.port,
+          open: index != -1,
+        });
+      });
+
+      this.DetailModel.show = true;
+    },
+    saveLauncherType(launcherType) {
+      this.deployObjData.launcherType = launcherType;
+    },
+    savePull(pull) {
+      this.deployObjData.imagePullPolicy = pull;
+    },
+    saveStacked(notStacked) {
+      this.deployObjData.notStacked = notStacked;
+    },
+    saveReplicas(replicas) {
+      this.deployObjData.replicas = parseInt(replicas);
+    },
+    saveJobModel(daemonSet) {
+      this.deployObjData.daemonSet = daemonSet;
+    },
+    saveAffinity(data) {
+      this.deployObjData.abilityAffinity = data.abilityAffinity;
+      this.deployObjData.nodeSelector = data.NodeSelector;
+    },
+    saveHpa(data) {},
+    saveDisk(mounts) {
+      this.deployObjData.mounts = mounts;
+    },
+    saveResource(sourceModel) {
+      this.deployObjData.resources = sourceModel;
+    },
+    saveNetwork(data) {
+      if (data.HostNetwork && data.showHostPort) {
+        return this.$message.error(
+          `${this.$t("deployService.form.portOrNetWork")}`
+        );
+      }
+      if (data.showHostPort) {
+        this.deployObjData.hostPorts = [];
+        if (data.HostPortArr) {
+          data.HostPortArr.forEach((item) => {
+            if (item.open) {
+              this.deployObjData.hostPorts.push({
+                nameRef: item.obj,
+                port: Math.floor(item.HostPort),
+              });
+            }
+          });
+        }
+      }
+      this.deployObjData.hostIPC = data.HostIpc;
+      this.deployObjData.hostNetwork = data.HostNetwork;
+    },
+    submit() {
+      for (let ref in this.$refs) {
+        // console.log(ref);
+        if (ref != "yamlEdit") {
+          this.$refs[ref].save();
+        }
+      }
+
+      let obj = jsYaml.load(this.yamlContent);
+
+      this.deployObjData = Object.assign(this.deployObjData, obj);
+
+      this.$emit("doInstall", this.deployObjData);
+    },
+    closeDetailModel() {
+      this.DetailModel.show = false;
+      this.k8sModel = {};
+      this.mounts = [];
+      this.labelMatchArr = [];
+      this.sourceModel = {};
+      this.serverData = {};
+      this.hpaModel = {
+        minReplicas: "",
+        maxReplicas: "",
+        indicatorData: [],
+      };
+    },
+    getDefaultValue() {
+      this.$ajax.getJSON("/k8s/api/default", {}).then((data) => {
+        this.defaultObj = data.ServerServantElem;
+        this.LabelMatchOperator = data.LabelMatchOperator || [];
+        this.indicators = data.indicators || [];
+      });
+    },
+    getDeployData() {
+      for (let ref in this.$refs) {
+        // console.log(ref);
+        if (ref != "yamlEdit") {
+          this.$refs[ref].save();
+        }
+      }
+
+      let obj = jsYaml.load(this.yamlContent);
+
+      this.deployObjData = Object.assign(this.deployObjData, obj);
+      return this.deployObjData;
+    },
+  },
+};
+</script>

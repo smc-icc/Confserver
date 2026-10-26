@@ -1,0 +1,25 @@
+'use strict';
+// Only these static codes may cross the service boundary; never reflect provider messages.
+module.exports = Object.freeze({
+  SMS_ENDPOINT_INVALID: '短信网关地址必须是包含 https:// 的完整地址，例如 https://sms.example.com/send。',
+  SMS_ALIYUN_ENDPOINT_INVALID: '阿里云接口地址应为 https://dysmsapi.aliyuncs.com。',
+  SMS_ALIYUN_MODE_REQUIRED: '直接连接阿里云请将“短信接入方式”切换为“阿里云短信”，并填写 AccessKey。',
+  SMS_ACCESS_KEY_ID_REQUIRED: '请填写阿里云 AccessKey ID。',
+  SMS_ACCESS_KEY_SECRET_REQUIRED: '请填写阿里云 AccessKey Secret；更换 AccessKey ID 时需同时填写配套 Secret。',
+  SMS_SIGN_REQUIRED: '请填写阿里云已审核通过的短信签名。',
+  SMS_TEMPLATE_REQUIRED: '请填写注册验证码模板 ID 和申请及审核通知模板 ID。',
+  SMS_TEMPLATE_INVALID: '阿里云模板 Code 应为 SMS_ 开头的编号，请检查验证码和通知两个模板。',
+  SMTP_HOST_INVALID: 'SMTP 服务器应填写有效主机名，不含协议前缀；启用邮件后不能使用 localhost。',
+  SMTP_CREDENTIALS_REQUIRED: '启用注册邮件后，请填写 SMTP 用户名和密码/授权码；暂不使用邮件可以先关闭邮件开关。',
+  SMTP_SENDER_INVALID: '请填写有效的发件人邮箱。',
+  ALIYUN_ACCESS_DENIED: '阿里云鉴权失败，请检查 AccessKey 是否有效及 RAM 短信发送权限。',
+  ALIYUN_SIGN_INVALID: '阿里云未接受短信签名，请检查签名内容及审核状态。',
+  ALIYUN_TEMPLATE_INVALID: '阿里云未接受短信模板，请检查模板 Code 及审核状态。',
+  ALIYUN_TEMPLATE_PARAMS_INVALID: '阿里云短信模板变量不匹配：验证码模板需使用 code；通知模板目前发送不含变量的固定通知。',
+  ALIYUN_BALANCE_INSUFFICIENT: '阿里云短信余额不足，请检查短信套餐或账户余额。',
+  ALIYUN_RATE_LIMITED: '阿里云短信发送频率受限，请稍后再试。',
+  ALIYUN_NETWORK_ERROR: '连接阿里云短信接口失败或超时，请检查服务器网络；请先核对发送记录再重试。',
+  ALIYUN_REJECTED: '阿里云未受理发送请求，请在短信控制台核对发送记录、签名及模板。',
+  ALIYUN_PHONE_INVALID: '当前阿里云接入支持中国大陆手机号，请填写 11 位手机号或 +86 格式。',
+  ALIYUN_CONFIG_INVALID: '阿里云短信配置不完整，请检查接口地址、AccessKey、签名和模板。',
+});

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="/static/market/axios.min.js"></script>
+  <script>
+    window.addEventListener('unhandledrejection', function (e) {
+      var reason = e.reason;
+      var msg = reason && (reason.message || reason.err_msg || String(reason));
+      if (msg && (msg.indexOf('Failed to fetch') !== -1 || msg.indexOf('NetworkError') !== -1)) {
+        e.preventDefault();
+        console.warn('[market embed]', msg);
+      }
+    });
+
+    function showMarketDisabled(msg) {
+      document.getElementById('market').innerHTML =
+        '<div style="padding:48px 24px;max-width:720px;margin:0 auto;line-height:1.6;color:#606266;font-size:14px;">'
+        + msg
+        + '</div>';
+      if (parent.document.loadFrameSucc) {
+        parent.document.loadFrameSucc();
+      }
+    }
+
+    function loadFrame() {
+      axios.get('/web/market').then(function (rsp) {
+        var data = rsp.data || {};
+        if (data.disabled || !data.url) {
+          showMarketDisabled(
+            '<p><b>应用商店已禁用或未配置地址。</b></p>'
+            + '<p>可设置 <code>TARS_MARKET_DISABLE=1</code> 或 <code>TARS_MARKET_URL</code>。</p>'
+          );
+          return;
+        }
+
+        window.localStorage.marketUrl = data.url;
+        var base = String(data.url).replace(/\/$/, '');
+        var embedUrl = base + '/load_embed.html?' + Date.now();
+        var wrap = document.getElementById('market');
+        var iframe = document.createElement('iframe');
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('title', 'TARS Market');
+        iframe.style.cssText = 'width:100%;height:1000px;border:0;display:block;';
+        iframe.src = embedUrl;
+        iframe.onload = function () {
+          if (parent.document.loadFrameSucc) {
+            parent.document.loadFrameSucc();
+          }
+        };
+        wrap.appendChild(iframe);
+      }).catch(function () {
+        showMarketDisabled('<p>获取 <code>/web/market</code> 配置失败。</p>');
+      });
+    }
+
+    loadFrame();
+  </script>
+</head>
+<body>
+  <div id="market"></div>
+</body>
+</html>

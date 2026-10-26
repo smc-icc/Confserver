@@ -1,0 +1,15 @@
+{
+  "kind": "smc-component/1",
+  "deploymentId": "customer-a",
+  "module": "ivr",
+  "version": "1.0.0",
+  "services": [
+    {
+      "application": "SMC-ICC",
+      "serverName": "IVRServer",
+      "nodeName": "REPLACE_WITH_TARGET_NODE",
+      "patchId": 0,
+      "allowExisting": true
+    }
+  ]
+}

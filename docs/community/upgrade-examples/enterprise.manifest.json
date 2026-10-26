@@ -1,0 +1,11 @@
+{
+  "license": "enterprise.license.signed.json",
+  "components": [
+    "icc.plan.signed.json",
+    "ivr.plan.signed.json",
+    "itr.plan.signed.json",
+    "outbound.plan.signed.json",
+    "aiqc.plan.signed.json"
+  ],
+  "plugin": "flow-designer-1.0.0.smcp"
+}

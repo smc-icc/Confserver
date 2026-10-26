@@ -1,0 +1,32 @@
+{
+  "kind": "smc-component/1",
+  "deploymentId": "customer-a",
+  "module": "icc",
+  "version": "1.0.0",
+  "connections": {
+    "ccsAgentObj": "SMC-ICC.CCSServer.AgentObj"
+  },
+  "services": [
+    {
+      "application": "SMC-ICC",
+      "serverName": "CCSServer",
+      "nodeName": "REPLACE_WITH_TARGET_NODE",
+      "patchId": 0,
+      "allowExisting": true
+    },
+    {
+      "application": "SMC-ICC",
+      "serverName": "TASServer",
+      "nodeName": "REPLACE_WITH_TARGET_NODE",
+      "patchId": 0,
+      "allowExisting": true
+    },
+    {
+      "application": "SMC-ICC",
+      "serverName": "ACDServer",
+      "nodeName": "REPLACE_WITH_TARGET_NODE",
+      "patchId": 0,
+      "allowExisting": true
+    }
+  ]
+}

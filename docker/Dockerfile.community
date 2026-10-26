@@ -1,0 +1,45 @@
+# SMC-ICC ConfServer（含 FreeSWITCH xml_curl directory）
+# 构建：docker build -t smc-icc/confserver:latest -f docker/confserver/Dockerfile ConfServer
+FROM node:22-bookworm-slim@sha256:43ac6c60b8f89723f746e8a92ce91abd5017e627ce1ddfe4238355d3a30b772c AS client-build
+ARG OMNI_PUBLIC_URL=""
+WORKDIR /client
+COPY client/package.json client/package-lock.json ./
+RUN npm ci --ignore-scripts --no-audit --no-fund --registry=https://registry.npmjs.org
+COPY client/ ./
+# The standalone VDN login entry imports the shared locale files above /client.
+COPY locale/ /locale/
+RUN npx --no-install patch-package && VUE_APP_OMNI_PUBLIC_URL="$OMNI_PUBLIC_URL" npm run build
+
+FROM node:22-bookworm-slim@sha256:43ac6c60b8f89723f746e8a92ce91abd5017e627ce1ddfe4238355d3a30b772c
+ARG RELEASE_VERSION=development
+LABEL org.opencontainers.image.title="SMC-ICC ConfManage" \
+      org.opencontainers.image.version=$RELEASE_VERSION \
+      cloud.seami.smc-icc.console="confmanage"
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    NODE_ENV=production \
+    SMC_CONFSERVER_RELEASE=1 \
+    PORT=3000 \
+    ENABLE_K8S=false \
+    TARS_MARKET_DISABLE=true \
+    WEB_ALTER=false \
+    LIMIT_ENABLE=false
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+        python3 make g++ ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /tars-web
+COPY package.release.json ./package.json
+COPY package-lock.release.json ./package-lock.json
+RUN npm ci --omit=dev --no-audit --no-fund --ignore-scripts \
+        --registry=https://registry.npmjs.org \
+    && npm cache clean --force \
+    && node -e "const fs=require('fs'),c=require('crypto'),h=p=>c.createHash('sha256').update(fs.readFileSync(p)).digest('hex');fs.writeFileSync('smc-release-dependencies.json',JSON.stringify({'package.json':h('package.json'),lockfile:h('package-lock.json')}));"
+
+COPY . ./
+COPY package.release.json ./package.json
+COPY package-lock.release.json ./package-lock.json
+COPY --from=client-build /client/dist ./client/dist
+EXPOSE 3000
+CMD ["node", "bin/www"]

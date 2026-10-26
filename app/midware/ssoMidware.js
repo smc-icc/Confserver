@@ -1,0 +1,209 @@
+// 第三方登录相关
+const request = require('request-promise-any');
+const _ = require('lodash');
+const url = require('url');
+const logger = require('../../logger');
+
+module.exports = (loginConf) => {
+  console.log("SSO中间件函数被调用，loginConf:", loginConf);
+  console.log("SSO中间件函数开始执行");
+  try {
+    const cookieDomainConfig = {
+      domain: loginConf.cookieDomain || '', // 用户cookie域
+    };
+    const cookieConfig = Object.assign({
+      maxAge: 365 * 24 * 60 * 60 * 1000, // 用户cookie过期时间为1年
+    }, cookieDomainConfig);
+
+    console.log("SSO中间件函数返回中间件");
+    return async (ctx, next) => {
+
+      console.log("=== SSO中间件开始执行 ===");
+      console.log("SSO中间件执行，路径:", ctx.request.path, "完整URL:", ctx.request.url);
+
+      // 添加更多调试信息
+      console.log("SSO中间件 - enableLogin:", loginConf.enableLogin);
+      console.log("SSO中间件 - ignore列表:", loginConf.ignore);
+      console.log("SSO中间件 - 是否在忽略列表中:", isInPath(ctx, loginConf.ignore || []));
+
+      if (ctx.request.path === '/logout') {
+        ctx.cookies.set(loginConf.ticketCookieName || 'ticket', null, cookieDomainConfig);
+        ctx.cookies.set(loginConf.uidCookieName || 'uid', null, cookieDomainConfig);
+        console.log("toLogoutPage=========");
+        toLogoutPage(ctx);
+      } else if (!loginConf.enableLogin) {
+        console.log("登录验证已禁用，设置默认用户");
+        ctx.uid = loginConf.defaultLoginUid || '';
+        await next();
+      } else if (isInPath(ctx, loginConf.ignore || []) || isInIgnoreIps(ctx, loginConf.ignoreIps || [])) { // 跳过用户配置的不需要验证的url或白名单IP
+        console.log("路径在忽略列表中，跳过登录验证");
+        ctx.uid = ctx.query.uid || loginConf.defaultLoginUid;
+      
+        await next();
+      } else {
+        let ticket; let uid;
+        const ticketFromQuery = ctx.query[loginConf.ticketParamName || 'ticket'];
+        if (ticket = ticketFromQuery) {
+          uid = await getUid(ctx, ticket);
+          if (uid) {
+            await ctx.cookies.set(loginConf.ticketCookieName || 'ticket', ticket, cookieConfig);
+            await ctx.cookies.set(loginConf.uidCookieName || 'uid', uid, cookieConfig);
+          }
+        }
+        if (!uid) {
+          uid = ctx.cookies.get(loginConf.uidCookieName || 'uid');
+        }
+        if (!ticket) {
+          ticket = ctx.cookies.get(loginConf.ticketCookieName || 'ticket');
+        }
+
+        ticket = ticket || '';
+
+        // console.log("ticket:", ticket);
+
+        console.log("验证结果:", await validate(ctx, uid, ticket), "uid:", uid, "ticket:", ticket);
+        if (await validate(ctx, uid, ticket)) {
+          console.log("验证成功，设置用户ID:", uid);
+          ctx.uid = uid;
+          if (ticketFromQuery && !isInPath(ctx, loginConf.apiPrefix || [])) {
+            const urlObj = url.parse(ctx.request.url, true);
+            delete (urlObj.query[loginConf.ticketParamName || 'ticket']);
+            delete (urlObj.search);
+            const redirectUrl = url.format(urlObj);
+            ctx.redirect(redirectUrl);
+          } else {
+            await next();
+          }
+        } else if (isInPath(ctx, loginConf.apiPrefix)) {
+          console.log("API接口，返回未登录错误");
+          ctx.body = { ret_code: 500, err_msg: loginConf.apiNotLoginMes, data: {} };
+        } else {
+          console.log("页面访问，跳转到登录页面");
+          toLoginPage(ctx);
+        }
+      }
+    };
+
+
+    // 检测是否在path列表中
+    function isInPath(ctx, pathList) {
+
+      const pathname = ctx.request.path;
+      console.log("isInPath检查 - pathname:", pathname, "pathList:", pathList);
+
+      const index = _.findIndex(pathList, (rule) => {
+        if (!rule) {
+          return false;
+        } if (typeof rule === 'string') {
+          const result = pathname.indexOf(rule) === 0;
+          console.log("isInPath检查规则:", rule, "结果:", result);
+          return result;
+        } if (rule instanceof RegExp) {
+          return rule.test(pathname);
+        }
+      });
+
+      console.log("isInPath最终结果:", index > -1);
+      return index > -1;
+    }
+
+    // 检测是否在IP白名单之中
+    function isInIgnoreIps(ctx, ignoreIps) {
+      const { ip } = ctx;
+
+      return _.indexOf(ignoreIps || [], ip) > -1;
+    }
+
+    // 控制跳转到登录页面
+    async function toLoginPage(ctx) {
+      if (loginConf.loginUrl.indexOf('?') === -1) {
+        ctx.redirect(`${loginConf.loginUrl}?${loginConf.redirectUrlParamName}=${encodeURIComponent(`${ctx.protocol}://${ctx.host}${ctx.request.url}`)}`);
+      } else {
+        ctx.redirect(`${loginConf.loginUrl}&${loginConf.redirectUrlParamName}=${encodeURIComponent(`${ctx.protocol}://${ctx.host}${ctx.request.url}`)}`);
+      }
+    }
+
+    // 控制跳转到登出页面
+    async function toLogoutPage(ctx) {
+      logger.info('toLogoutPage', ctx);
+      if (loginConf.logoutUrl) {
+        if (loginConf.loginUrl.indexOf('?') === -1) {
+          ctx.redirect(`${loginConf.logoutUrl}?${loginConf.logoutredirectUrlParamName}=${encodeURIComponent(`${ctx.protocol}://${ctx.host}`)}`);
+        } else {
+          ctx.redirect(`${loginConf.logoutUrl}&${loginConf.logoutredirectUrlParamName}=${encodeURIComponent(`${ctx.protocol}://${ctx.host}`)}`);
+        }
+      } else {
+        ctx.redirect(`${ctx.protocol}://${ctx.host}`);
+      }
+    }
+
+    // 通过ticket获取用户信息
+    async function getUid(ctx, ticket) {
+      try {
+        if (loginConf.getUidByTicket) {
+          if (_.isFunction(loginConf.getUidByTicket)) {
+            return await loginConf.getUidByTicket(ctx, ticket);
+          }
+          let uidInfo = '';
+          if (loginConf.getUidByTicket.indexOf('?') === -1) {
+            uidInfo = await request.get(`${loginConf.getUidByTicket}?${loginConf.getUidByTicketParamName}=${ticket}`);
+          } else {
+            uidInfo = await request.get(`${loginConf.getUidByTicket}&${loginConf.getUidByTicketParamName}=${ticket}`);
+          }
+          try {
+            uidInfo = JSON.parse(uidInfo);
+          } catch (e) {
+            uidInfo = false;
+          }
+          if (!uidInfo) return false;
+          return _.result(uidInfo, loginConf.uidKey) || false;
+        }
+        return false;
+      } catch (e) {
+        return false;
+      }
+    }
+
+    // 判断是否ticket和uid是否有效
+    async function validate(ctx, uid, ticket) {
+      try {
+        if (loginConf.validate) { // 如果没有配置校验接口，则表示此用户名直接有效直到过期
+          if (_.isFunction(loginConf.validate)) {
+            return await loginConf.validate(ctx, uid, ticket);
+          }
+          let validateRet = '';
+          if (loginConf.validate.indexOf('?') === -1) {
+            validateRet = await request.get(`${loginConf.validate}?${loginConf.validateTicketParamName}=${ticket}&${loginConf.validateUidParamName}=${uid}`);
+          } else {
+            validateRet = await request.get(`${loginConf.validate}&${loginConf.validateTicketParamName}=${ticket}&${loginConf.validateUidParamName}=${uid}`);
+          }
+          try {
+            validateRet = JSON.parse(validateRet);
+          } catch (e) {
+            validateRet = false;
+          }
+          if (!validateRet) return false;
+          const { validateMatch } = loginConf;
+          for (let i = 0; i < validateMatch.length; i++) {
+            if (_.result(validateRet, validateMatch[i][0]) !== validateMatch[i][1]) {
+              return false;
+            }
+          }
+          return true;
+        }
+        return true;
+      } catch (e) {
+        throw (e);
+        return false;
+      }
+    }
+  } catch (e) {
+    console.error("SSO中间件函数执行出错:", e);
+    console.error("错误堆栈:", e.stack);
+    // 返回一个简单的中间件以避免应用崩溃
+    return async (ctx, next) => {
+      console.log("SSO中间件出错，使用默认中间件");
+      await next();
+    };
+  }
+};

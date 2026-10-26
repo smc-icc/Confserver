@@ -1,0 +1,20 @@
+{
+  "kind": "smc-license/1",
+  "deploymentId": "customer-a",
+  "licenseId": "customer-a-professional-001",
+  "revision": 1,
+  "edition": "professional",
+  "notBefore": "2026-10-26T00:00:00Z",
+  "expiresAt": "2027-10-26T00:00:00Z",
+  "modules": [
+    "icc",
+    "ivr",
+    "itr"
+  ],
+  "limits": {
+    "voiceSeats": 2,
+    "sipTrunks": 2,
+    "concurrentCalls": 2,
+    "videoConcurrentCalls": 2
+  }
+}

@@ -1,0 +1,834 @@
+/*
+ * Service/config pages use the same visual language as ir_web's system
+ * settings: restrained surfaces, blue focus states and compact data-dense
+ * controls. The selectors stay scoped to pages opting into
+ * `.cfg-page` so the legacy marketplace and designer views are unaffected.
+ */
+
+:root {
+  --cfg-bg: #f4f7fb;
+  --cfg-sidebar: #f8fafc;
+  --cfg-header: #fff;
+  --cfg-surface: #fff;
+  --cfg-surface-raised: #f7f9fc;
+  --cfg-surface-soft: #fafbfc;
+  --cfg-border: #e4e7ed;
+  --cfg-border-strong: #dcdfe6;
+  --cfg-text: #565b66;
+  --cfg-heading: #222329;
+  --cfg-muted: #909399;
+  --cfg-accent: #457ff5;
+  --cfg-accent-hover: #2d66dc;
+  --cfg-accent-soft: rgba(69, 127, 245, 0.12);
+  --cfg-success: #49cc8f;
+  --cfg-danger: #e0543f;
+  --cfg-radius: 6px;
+}
+
+.cfg-page,
+.config-section {
+  box-sizing: border-box;
+}
+
+.cfg-page *,
+.cfg-page *::before,
+.cfg-page *::after {
+  box-sizing: border-box;
+}
+
+/* The surrounding server shell is part of the same workspace. */
+.page_server:has(.page_server_manage),
+.page_server:has(.page_server_history) {
+  background: var(--cfg-bg);
+  color: #565b66;
+}
+
+.page_server:has(.page_server_manage) .left-view,
+.page_server:has(.page_server_history) .left-view {
+  flex: 0 0 252px;
+  max-width: 252px;
+  padding-right: 12px;
+  border-right: 1px solid var(--cfg-border);
+  background: var(--cfg-sidebar);
+}
+
+.page_server:has(.page_server_manage) .tree_search,
+.page_server:has(.page_server_history) .tree_search {
+  margin: 0;
+  padding: 16px 12px 12px;
+  border-bottom: 1px solid var(--cfg-border);
+}
+
+.page_server:has(.page_server_manage) .tree_search_key,
+.page_server:has(.page_server_history) .tree_search_key {
+  width: calc(100% - 28px);
+  margin-right: 8px;
+  padding: 8px 10px;
+  border: 1px solid var(--cfg-border-strong);
+  border-radius: 5px;
+  outline: 0;
+  color: #222329;
+  background: #fff;
+  font-size: 13px;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.page_server:has(.page_server_manage) .tree_search_key::placeholder,
+.page_server:has(.page_server_history) .tree_search_key::placeholder {
+  color: #999;
+}
+
+.page_server:has(.page_server_manage) .tree_search_key:focus,
+.page_server:has(.page_server_history) .tree_search_key:focus {
+  border-color: var(--cfg-accent);
+  box-shadow: 0 0 0 2px var(--cfg-accent-soft);
+}
+
+.page_server:has(.page_server_manage) .tree_search .el-icon-refresh-right,
+.page_server:has(.page_server_history) .tree_search .el-icon-refresh-right {
+  color: var(--cfg-muted);
+}
+
+.page_server:has(.page_server_manage) .tree_search .el-icon-refresh-right:hover,
+.page_server:has(.page_server_history) .tree_search .el-icon-refresh-right:hover {
+  color: var(--cfg-accent);
+}
+
+.page_server:has(.page_server_manage) .tree_wrap,
+.page_server:has(.page_server_history) .tree_wrap {
+  padding: 10px 0;
+}
+
+.page_server:has(.page_server_manage) .left-tree,
+.page_server:has(.page_server_history) .left-tree {
+  width: 100%;
+  min-height: 0;
+  color: #565b66;
+  background: transparent;
+}
+
+.page_server:has(.page_server_manage) .left-tree .el-tree-node__content,
+.page_server:has(.page_server_history) .left-tree .el-tree-node__content {
+  height: 34px;
+  color: #565b66;
+  background: transparent;
+}
+
+.page_server:has(.page_server_manage) .left-tree .el-tree-node__content:hover,
+.page_server:has(.page_server_history) .left-tree .el-tree-node__content:hover {
+  background: #f3f6fb;
+}
+
+.page_server:has(.page_server_manage) .left-tree.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content,
+.page_server:has(.page_server_history) .left-tree.el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content {
+  color: var(--cfg-accent);
+  background: #eaf2ff;
+  box-shadow: inset 3px 0 0 var(--cfg-accent);
+}
+
+.page_server:has(.page_server_manage) .right-view,
+.page_server:has(.page_server_history) .right-view {
+  min-width: 0;
+  margin-left: 16px;
+  padding-right: 14px;
+  background: transparent;
+}
+
+.page_server:has(.page_server_manage) .btabs_wrap,
+.page_server:has(.page_server_history) .btabs_wrap {
+  height: 40px;
+  margin-bottom: 14px;
+}
+
+.page_server:has(.page_server_manage) .btabs:before,
+.page_server:has(.page_server_history) .btabs:before {
+  border-color: #d7dae0;
+}
+
+.page_server:has(.page_server_manage) .btabs_item,
+.page_server:has(.page_server_history) .btabs_item {
+  border-color: #d7dae0;
+  background: #fff;
+}
+
+.page_server:has(.page_server_manage) .btabs_item.active,
+.page_server:has(.page_server_history) .btabs_item.active {
+  border-color: #457ff5;
+  background: #457ff5;
+}
+
+.page_server:has(.page_server_manage) .btabs_link,
+.page_server:has(.page_server_history) .btabs_link {
+  height: 38px;
+  color: #9096a3;
+  line-height: 28px;
+}
+
+.page_server:has(.page_server_manage) .btabs_item.active .btabs_link,
+.page_server:has(.page_server_manage) .btabs_link:hover,
+.page_server:has(.page_server_history) .btabs_item.active .btabs_link,
+.page_server:has(.page_server_history) .btabs_link:hover {
+  color: #fff;
+}
+
+.page_server:has(.page_server_manage) .btabs_all,
+.page_server:has(.page_server_history) .btabs_all {
+  background: #c95757;
+}
+
+/* Main sections */
+.config-section {
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--cfg-border);
+  border-radius: var(--cfg-radius);
+  color: var(--cfg-text);
+  background: var(--cfg-surface);
+  box-shadow: 0 4px 16px rgba(34, 35, 41, 0.06);
+}
+
+.config-section + .config-section {
+  margin-top: 14px;
+}
+
+.config-section-header {
+  display: flex;
+  flex: 0 0 auto;
+  min-height: 56px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 10px 18px;
+  border-bottom: 1px solid var(--cfg-border);
+  background: var(--cfg-surface-raised);
+}
+
+.config-section-heading {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.config-section-title {
+  margin: 0;
+  color: var(--cfg-heading);
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.config-section-desc {
+  margin: 3px 0 0;
+  color: var(--cfg-muted);
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.config-section-actions {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.config-section-actions .el-button + .el-button {
+  margin-left: 0;
+}
+
+.config-section-actions .el-button {
+  min-width: 32px;
+  padding: 7px 10px;
+}
+
+.config-section-body {
+  padding: 18px;
+}
+
+.config-table {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.config-section-foot {
+  display: flex;
+  flex: 0 0 auto;
+  min-height: 48px;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 8px 18px;
+  border-top: 1px solid var(--cfg-border);
+  background: var(--cfg-surface-soft);
+}
+
+/* Element UI 2 table treatment (the reference uses the same density). */
+.config-section .el-table,
+.cfg-table {
+  border-radius: 5px;
+  color: var(--cfg-text);
+  background: var(--cfg-surface);
+  font-size: 12px;
+}
+
+.config-section .el-table th.el-table__cell,
+.cfg-table th.el-table__cell {
+  height: 42px;
+  border-color: var(--cfg-border);
+  color: #565b66;
+  background: var(--cfg-surface-raised);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.config-section .el-table td.el-table__cell,
+.cfg-table td.el-table__cell {
+  height: 44px;
+  border-color: var(--cfg-border);
+  color: var(--cfg-text);
+  background: var(--cfg-surface);
+}
+
+.config-section .el-table th.el-table__cell > .cell,
+.cfg-table th.el-table__cell > .cell {
+  color: #565b66;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.config-section .el-table td.el-table__cell > .cell,
+.cfg-table td.el-table__cell > .cell {
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.config-section .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell,
+.cfg-table.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background: #fafbfc;
+}
+
+.config-section .el-table__body tr:hover > td.el-table__cell,
+.cfg-table .el-table__body tr:hover > td.el-table__cell {
+  background: #edf4ff;
+}
+
+.config-section .el-table::before,
+.config-section .el-table--border::after,
+.config-section .el-table--border::before {
+  background-color: var(--cfg-border);
+}
+
+.config-section .el-table__empty-block {
+  background: var(--cfg-surface);
+}
+
+.config-section .el-table__empty-text {
+  color: #707070;
+}
+
+/* Controls, links and pagination */
+.config-section .el-button {
+  border-color: var(--cfg-border-strong);
+  border-radius: 5px;
+  color: #565b66;
+  background: #fff;
+  font-weight: 500;
+}
+
+.config-section .el-button:hover,
+.config-section .el-button:focus {
+  border-color: var(--cfg-accent);
+  color: var(--cfg-accent);
+  background: #edf4ff;
+}
+
+.config-section .el-button--text {
+  border-color: transparent;
+  color: var(--cfg-accent);
+  background: transparent;
+}
+
+.config-section .el-button--text:hover,
+.config-section .el-button--text:focus {
+  border-color: transparent;
+  color: var(--cfg-accent-hover);
+  background: transparent;
+}
+
+.config-section .el-input__inner,
+.config-section .el-textarea__inner {
+  border-color: var(--cfg-border-strong);
+  border-radius: 5px;
+  color: #303133;
+  background: #fff;
+}
+
+.config-section .el-input__inner:focus,
+.config-section .el-textarea__inner:focus {
+  border-color: var(--cfg-accent);
+}
+
+.config-section a,
+.config-section a:link,
+.config-section a:visited {
+  color: var(--cfg-accent);
+  text-decoration: none;
+}
+
+.config-section a:hover {
+  color: var(--cfg-accent-hover);
+}
+
+.cfg-page .el-pagination {
+  color: var(--cfg-muted);
+}
+
+.cfg-page .el-pagination button,
+.cfg-page .el-pager li {
+  color: var(--cfg-muted);
+  background: transparent;
+}
+
+.cfg-page .el-pagination button:disabled {
+  color: #c0c4cc;
+  background: transparent;
+}
+
+.cfg-page .el-pager li:hover,
+.cfg-page .el-pagination button:hover {
+  color: var(--cfg-accent);
+}
+
+.cfg-page .el-pager li.active {
+  color: var(--cfg-accent);
+}
+
+.cfg-page .el-pagination__total,
+.cfg-page .el-pagination__jump {
+  color: var(--cfg-muted);
+}
+
+.cfg-page .el-pagination .el-input__inner {
+  color: #303133;
+  background: #fff;
+}
+
+.cfg-page .danger,
+.cfg-page [style*="FF0000"],
+.cfg-page [style*="ff0000"] {
+  color: var(--cfg-danger) !important;
+}
+
+.cfg-page [style*="49CC8F"],
+.cfg-page [style*="49cc8f"] {
+  color: var(--cfg-success) !important;
+}
+
+/* Shared light treatment for the operations and ICC configuration shells. */
+#app:has(.operation-sidebar) .operation-content > [class*="page_operation_"],
+#app:has(.smcicc-shell) .smcicc-page {
+  box-sizing: border-box;
+  border: 1px solid var(--cfg-border);
+  border-radius: var(--cfg-radius);
+  background: #fff;
+  box-shadow: 0 4px 16px rgba(34, 35, 41, 0.06);
+}
+
+#app:has(.operation-sidebar) .operation-content > [class*="page_operation_"] {
+  min-height: 100%;
+  padding: 20px;
+}
+
+#app:has(.smcicc-shell) .smcicc-page {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+  padding: 20px;
+  color: var(--cfg-text);
+}
+
+#app:has(.smcicc-shell) .smcicc-main > * {
+  flex: 1 0 auto;
+  width: 100%;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+#app:has(.operation-sidebar) .operation-content .el-table,
+#app:has(.smcicc-shell) .smcicc-page .el-table {
+  color: var(--cfg-text);
+  background: #fff;
+}
+
+#app:has(.operation-sidebar) .operation-content .el-table th.el-table__cell,
+#app:has(.smcicc-shell) .smcicc-page .el-table th.el-table__cell {
+  color: var(--cfg-text);
+  background: var(--cfg-surface-raised);
+  border-color: var(--cfg-border);
+}
+
+#app:has(.operation-sidebar) .operation-content .el-table td.el-table__cell,
+#app:has(.smcicc-shell) .smcicc-page .el-table td.el-table__cell {
+  color: var(--cfg-text);
+  background: #fff;
+  border-color: var(--cfg-border);
+}
+
+#app:has(.operation-sidebar) .operation-content .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell,
+#app:has(.smcicc-shell) .smcicc-page .el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background: #fafbfc;
+}
+
+#app:has(.operation-sidebar) .operation-content .el-table__body tr:hover > td.el-table__cell,
+#app:has(.smcicc-shell) .smcicc-page .el-table__body tr:hover > td.el-table__cell {
+  background: #edf4ff;
+}
+
+#app:has(.operation-sidebar) .operation-content .el-input__inner,
+#app:has(.operation-sidebar) .operation-content .el-textarea__inner,
+#app:has(.smcicc-shell) .smcicc-page .el-input__inner,
+#app:has(.smcicc-shell) .smcicc-page .el-textarea__inner {
+  color: #303133;
+  background: #fff;
+  border-color: var(--cfg-border-strong);
+}
+
+#app:has(.operation-sidebar) .operation-content .el-card,
+#app:has(.smcicc-shell) .smcicc-page .el-card {
+  border-color: var(--cfg-border);
+  background: #fff;
+  box-shadow: none;
+}
+
+/* ICC list pages declare a 520px table cap for the legacy layout. Let the
+ * table occupy the remaining card height and scroll only its body instead. */
+#app:has(.smcicc-shell) .smcicc-page > .el-table {
+  display: flex;
+  min-height: 0;
+  max-height: none !important;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+#app:has(.smcicc-shell) .smcicc-page > .el-table .el-table__body-wrapper {
+  min-height: 0;
+  max-height: none !important;
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .sip-ext-page, .access-code-page, .mc-manager-page, .prd-manager-page, .isx-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page, .channel-group-page, .channel-config-page, .agent-user-page, .service-route-page) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  min-height: 0;
+  flex: none;
+  overflow: hidden;
+}
+
+/* CCS is a split-pane grid. Keep it pinned to the outlet and override the
+ * shared .smcicc-page flex declaration, which otherwise makes both panes
+ * shrink to their content width on wide screens. */
+#app:has(.smcicc-shell) .smcicc-sys-outlet > .ccs-manager-page {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  width: 100%;
+  min-height: 0;
+  flex: none;
+  overflow: hidden;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > .vdn-manager-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  flex: none;
+  overflow: hidden;
+}
+
+#app:has(.smcicc-shell) .vdn-workspace-tabs .el-tab-pane > .agent-user-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > .channel-page {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  width: 100%;
+  min-height: 0;
+  flex: none;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Keep the configuration list pages on the same compact shell as account
+ * management: title at left, filters centered, actions at right, and the
+ * table taking the remaining height. */
+#app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .access-code-page, .mc-manager-page, .prd-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page, .channel-group-page, .channel-config-page, .agent-user-page, .service-route-page) {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr) auto;
+  column-gap: 16px;
+  align-content: stretch;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .sip-ext-page, .access-code-page, .mc-manager-page, .prd-manager-page, .isx-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) > .page-title {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  margin: 0 0 16px;
+  color: var(--cfg-heading);
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .sip-ext-page, .access-code-page, .mc-manager-page, .prd-manager-page, .isx-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) > .desc {
+  display: none;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .access-code-page, .mc-manager-page, .prd-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) > .toolbar {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: center;
+  justify-self: center;
+  margin: 0 0 16px;
+  white-space: nowrap;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .access-code-page, .mc-manager-page, .prd-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) > .actions {
+  display: flex;
+  grid-column: 3;
+  grid-row: 1;
+  align-items: center;
+  justify-self: end;
+  gap: 8px;
+  margin: 0 0 16px;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .sip-ext-page, .access-code-page, .mc-manager-page, .prd-manager-page, .isx-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) > .actions .el-button,
+#app:has(.smcicc-shell) .smcicc-sys-outlet > .isx-manager-page > .isx-toolbar .el-button,
+#app:has(.smcicc-shell) .smcicc-sys-outlet > .isx-manager-page > .board-actions .el-button {
+  width: 34px;
+  min-width: 34px;
+  height: 32px;
+  padding: 8px 0;
+  font-size: 0;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .sip-ext-page, .access-code-page, .mc-manager-page, .prd-manager-page, .isx-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) > .actions .el-button [class*="el-icon-"],
+#app:has(.smcicc-shell) .smcicc-sys-outlet > .isx-manager-page > .isx-toolbar .el-button [class*="el-icon-"],
+#app:has(.smcicc-shell) .smcicc-sys-outlet > .isx-manager-page > .board-actions .el-button [class*="el-icon-"] {
+  margin: 0;
+  font-size: 14px;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .sip-ext-page, .access-code-page, .mc-manager-page, .prd-manager-page, .isx-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) > .actions .el-button + .el-button,
+#app:has(.smcicc-shell) .smcicc-sys-outlet > .isx-manager-page > .isx-toolbar .el-button + .el-button,
+#app:has(.smcicc-shell) .smcicc-sys-outlet > .isx-manager-page > .board-actions .el-button + .el-button {
+  margin-left: 0;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .sip-ext-page, .access-code-page, .mc-manager-page, .prd-manager-page, .isx-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page, .channel-group-page, .channel-config-page, .agent-user-page, .service-route-page) > .el-alert {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  margin-bottom: 12px;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .access-code-page, .mc-manager-page, .prd-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page, .channel-group-page, .channel-config-page, .agent-user-page, .service-route-page) > .el-table {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  width: 100%;
+  min-height: 0;
+}
+
+#app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .access-code-page, .mc-manager-page, .prd-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page, .channel-group-page, .channel-config-page, .agent-user-page, .service-route-page) > .pager {
+  grid-column: 1 / -1;
+  grid-row: 4;
+  margin-top: 12px;
+}
+
+/* SIP keeps its connection form above the list while using the same header
+ * and full-height table treatment. */
+#app:has(.smcicc-shell) .smcicc-sys-outlet > .sip-ext-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  column-gap: 16px;
+  align-content: stretch;
+}
+
+#app:has(.smcicc-shell) .sip-ext-page > .db-card {
+  grid-column: 1 / -1;
+  grid-row: 2;
+  width: 100%;
+  margin: 0 0 12px;
+}
+
+#app:has(.smcicc-shell) .sip-ext-page > .el-alert {
+  grid-column: 1 / -1;
+  grid-row: 3;
+}
+
+#app:has(.smcicc-shell) .sip-ext-page > .el-table {
+  grid-column: 1 / -1;
+  grid-row: 4;
+}
+
+#app:has(.smcicc-shell) .sip-ext-page > .pager {
+  grid-column: 1 / -1;
+  grid-row: 5;
+}
+
+/* ISX has a second-level board workspace, so keep its node selector beside
+ * the title and let the board table fill the lower area. */
+#app:has(.smcicc-shell) .smcicc-sys-outlet > .isx-manager-page {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto auto minmax(0, 1fr) auto;
+  column-gap: 16px;
+  align-content: stretch;
+}
+
+#app:has(.smcicc-shell) .isx-manager-page > .isx-toolbar {
+  grid-column: 1;
+  grid-row: 2;
+  justify-self: end;
+  margin-bottom: 12px;
+}
+
+#app:has(.smcicc-shell) .isx-manager-page > .el-alert,
+#app:has(.smcicc-shell) .isx-manager-page > .empty-tip {
+  grid-column: 1 / -1;
+  grid-row: 3;
+}
+
+#app:has(.smcicc-shell) .isx-manager-page > .board-tabs {
+  grid-column: 1 / -1;
+  grid-row: 4;
+  margin-bottom: 12px;
+}
+
+#app:has(.smcicc-shell) .isx-manager-page > .el-table {
+  grid-column: 1 / -1;
+  grid-row: 5;
+}
+
+#app:has(.smcicc-shell) .isx-manager-page > .pager {
+  grid-column: 1 / -1;
+  grid-row: 6;
+}
+
+/* Keep pagination placement consistent across legacy and newer ICC pages. */
+#app:has(.smcicc-shell) .smcicc-page .pager {
+  flex: 0 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: right;
+}
+
+@media (max-width: 1200px) {
+  #app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .access-code-page, .mc-manager-page, .prd-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+  }
+
+  #app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .access-code-page, .mc-manager-page, .prd-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) > .toolbar {
+    grid-column: 2;
+    justify-self: end;
+  }
+
+  #app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .access-code-page, .mc-manager-page, .prd-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) > .actions {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    justify-self: end;
+    margin-bottom: 12px;
+  }
+
+  #app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .access-code-page, .mc-manager-page, .prd-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) > .el-alert {
+    grid-row: 3;
+  }
+
+  #app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .access-code-page, .mc-manager-page, .prd-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) > .el-table {
+    grid-row: 4;
+  }
+
+  #app:has(.smcicc-shell) .smcicc-sys-outlet > :is(.sys-user-page, .odbc-page, .access-code-page, .mc-manager-page, .prd-manager-page, .mc100-manager-page, .access-machine-page, .hmp-manager-page, .acd-manager-page) > .pager {
+    grid-row: 5;
+  }
+}
+
+@media (max-width: 900px) {
+  .page_server:has(.page_server_manage) .left-view,
+  .page_server:has(.page_server_history) .left-view {
+    flex-basis: 210px;
+  }
+
+  .page_server:has(.page_server_manage) .right-view,
+  .page_server:has(.page_server_history) .right-view {
+    margin-left: 12px;
+  }
+
+  .config-section-header {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+}
+
+@media (max-width: 700px) {
+  .page_server:has(.page_server_manage) .left-view,
+  .page_server:has(.page_server_history) .left-view {
+    flex-basis: 178px;
+  }
+
+  .page_server:has(.page_server_manage) .right-view,
+  .page_server:has(.page_server_history) .right-view {
+    margin-left: 8px;
+    padding-right: 8px;
+  }
+
+  .config-section-header {
+    min-height: 52px;
+    padding: 8px 12px;
+  }
+
+  .config-section-title {
+    font-size: 14px;
+  }
+
+  .config-section-foot {
+    padding-right: 12px;
+    padding-left: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cfg-page *,
+  .cfg-page *::before,
+  .cfg-page *::after {
+    transition-duration: 0.01ms !important;
+  }
+}

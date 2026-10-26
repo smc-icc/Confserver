@@ -1,0 +1,23 @@
+{
+  "kind": "smc-license/1",
+  "deploymentId": "customer-a",
+  "licenseId": "customer-a-enterprise-002",
+  "revision": 2,
+  "edition": "enterprise",
+  "notBefore": "2026-10-26T00:00:00Z",
+  "expiresAt": "2027-10-26T00:00:00Z",
+  "modules": [
+    "icc",
+    "ivr",
+    "itr",
+    "outbound",
+    "aiqc",
+    "flow-designer"
+  ],
+  "limits": {
+    "voiceSeats": 20,
+    "sipTrunks": 10,
+    "concurrentCalls": 30,
+    "videoConcurrentCalls": 6
+  }
+}

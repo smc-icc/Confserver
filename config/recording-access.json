@@ -1,0 +1,8 @@
+{
+  "source": "sftp",
+  "sftp_host": "192.168.255.128",
+  "sftp_port": 22,
+  "sftp_user": "root",
+  "sftp_password": "focustar",
+  "remote_root": "/usr/local/freeswitch-1.10.12/var/lib/freeswitch/recordings"
+}

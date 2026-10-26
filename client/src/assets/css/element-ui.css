@@ -1,0 +1,69 @@
+/* Element UI 覆盖样式（由 let-ui.css 迁移） */
+.el-form.el-form--inline .el-form-item {
+  padding-left: 0 !important;
+  margin-right: 32px;
+  vertical-align: bottom;
+}
+
+.el-form.el-form--inline .el-form-item__label.el-form-item__label--top {
+  padding-right: 0;
+  width: 100%;
+}
+
+.el-form .el-input {
+  width: 100%;
+}
+
+.el-dialog__wrapper {
+  position: fixed !important;
+}
+
+.el-loading-mask .el-loading-spinner {
+  background: rgba(0, 0, 0, 0.9);
+  padding: 13px;
+}
+
+.el-input--small input {
+  font-size: 12px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.el-select--small .el-input__inner {
+  padding-left: 8px;
+}
+
+.el-select--small .el-input .el-select__selected-item {
+  margin-left: 0;
+}
+
+.el-select-dropdown__item {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.el-select.is-disabled .el-icon-circle-close {
+  z-index: -1;
+  pointer-events: none;
+}
+
+.el-radio + .el-radio {
+  margin-left: 12px;
+}
+
+.el-date-editor {
+  width: 100%;
+}
+
+.el-table th:last-child.right,
+.el-table td:last-child.right {
+  padding-right: 15px;
+}
+
+.el-table th .sort-caret {
+  position: relative;
+}
+
+.el-table .el-icon-caret-bottom {
+  left: 0;
+}

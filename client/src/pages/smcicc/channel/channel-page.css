@@ -1,0 +1,50 @@
+.channel-page {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex-direction: column;
+  padding: 0 !important;
+  overflow: hidden;
+  border: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.channel-page > .page-title,
+.channel-page > .desc {
+  display: none;
+}
+
+.channel-page > .omni-ch,
+.channel-page > .wx-ch,
+.channel-page > .channel-workspace,
+.channel-page > .el-tabs {
+  min-width: 0;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.channel-page > .el-tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.channel-page /deep/ .el-tabs__header {
+  flex: 0 0 auto;
+  margin: 0;
+  padding: 0 16px;
+  background: #fff;
+}
+
+.channel-page /deep/ .el-tabs__content {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.channel-page /deep/ .el-tab-pane {
+  height: 100%;
+  min-height: 0;
+}

@@ -1,0 +1,21 @@
+diff --git a/node_modules/@vue/vue-loader-v15/lib/plugin-webpack5.js b/node_modules/@vue/vue-loader-v15/lib/plugin-webpack5.js
+index 91126ff..3a1d076 100644
+--- a/node_modules/@vue/vue-loader-v15/lib/plugin-webpack5.js
++++ b/node_modules/@vue/vue-loader-v15/lib/plugin-webpack5.js
+@@ -3,7 +3,7 @@ const id = 'vue-loader-plugin'
+ const NS = 'vue-loader'
+ const BasicEffectRulePlugin = require('webpack/lib/rules/BasicEffectRulePlugin')
+ const BasicMatcherRulePlugin = require('webpack/lib/rules/BasicMatcherRulePlugin')
+-const DescriptionDataMatcherRulePlugin = require('webpack/lib/rules/DescriptionDataMatcherRulePlugin')
++// DescriptionDataMatcherRulePlugin removed in webpack 5.68+, skip for compatibility
+ const RuleSetCompiler = require('webpack/lib/rules/RuleSetCompiler')
+ const UseEffectRulePlugin = require('webpack/lib/rules/UseEffectRulePlugin')
+ 
+@@ -20,7 +20,6 @@ const ruleSetCompiler = new RuleSetCompiler([
+   new BasicMatcherRulePlugin('realResource'),
+   new BasicMatcherRulePlugin('issuer'),
+   new BasicMatcherRulePlugin('compiler'),
+-  new DescriptionDataMatcherRulePlugin(),
+   new BasicEffectRulePlugin('type'),
+   new BasicEffectRulePlugin('sideEffects'),
+   new BasicEffectRulePlugin('parser'),

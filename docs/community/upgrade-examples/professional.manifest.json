@@ -1,0 +1,8 @@
+{
+  "license": "professional.license.signed.json",
+  "components": [
+    "icc.plan.signed.json",
+    "ivr.plan.signed.json",
+    "itr.plan.signed.json"
+  ]
+}

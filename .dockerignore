@@ -1,0 +1,24 @@
+node_modules
+client/node_modules
+client/dist
+.cursor
+.git
+log
+*.log
+data
+
+# Release builds must not bake local credentials or licenses into any layer.
+.env
+.env.*
+*.pem
+**/smcloud_license.txt
+
+# Community images must not include old enterprise bundles or local release artifacts.
+backups
+files
+release
+**/*.map
+*.tgz
+*.tar.gz
+*.zip
+.tmp
